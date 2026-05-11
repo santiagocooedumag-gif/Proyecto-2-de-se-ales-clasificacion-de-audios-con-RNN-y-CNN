@@ -1,0 +1,91 @@
+{
+  "dataset": {
+    "nombre": "Cats vs Dogs Audio Classification",
+    "fuente": "Kaggle - stealthtechnologies",
+    "licencia": "CC BY 4.0",
+    "total_muestras": 1050,
+    "clases": {
+      "Cats": 567,
+      "Dogs": 484
+    },
+    "sample_rate": 22050,
+    "duracion_fija_segundos": 3,
+    "particion": {
+      "train": "70%",
+      "val": "20%",
+      "test": "10%"
+    }
+  },
+  "preprocesamiento": {
+    "CNN": {
+      "tipo": "Mel-Spectrogram",
+      "n_mels": 128,
+      "normalizacion": "min-max por muestra"
+    },
+    "RNN": {
+      "tipo": "Framing señal temporal pura",
+      "frame_size": 512,
+      "hop_size": 256,
+      "normalizacion": "z-score con media y std del train"
+    }
+  },
+  "modelo_CNN": {
+    "arquitectura": "Sequential CNN",
+    "capas": [
+      "Conv2D(32,3x3)",
+      "MaxPool2D",
+      "Dropout(0.25)",
+      "Conv2D(64,3x3)",
+      "MaxPool2D",
+      "Dropout(0.25)",
+      "Flatten",
+      "Dense(64)",
+      "Dropout(0.4)",
+      "Dense(1,sigmoid)"
+    ],
+    "optimizador": "Adam",
+    "learning_rate": 0.001,
+    "loss": "binary_crossentropy",
+    "batch_size": 32,
+    "epocas_max": 50,
+    "early_stopping": {
+      "monitor": "val_accuracy",
+      "patience": 8
+    },
+    "total_parametros": 4213249
+  },
+  "modelo_RNN": {
+    "arquitectura": "Bidirectional LSTM",
+    "capas": [
+      "BiLSTM(64, return_seq=True)",
+      "Dropout(0.3)",
+      "BiLSTM(32)",
+      "Dropout(0.3)",
+      "Dense(64)",
+      "Dropout(0.4)",
+      "Dense(1,sigmoid)"
+    ],
+    "optimizador": "Adam",
+    "learning_rate": 0.001,
+    "loss": "binary_crossentropy",
+    "batch_size": 32,
+    "epocas_max": 50,
+    "early_stopping": {
+      "monitor": "val_accuracy",
+      "patience": 8
+    },
+    "total_parametros": 340865
+  },
+  "resultados": {
+    "CNN": {
+      "val_accuracy": 0.9763,
+      "test_accuracy": 0.9712,
+      "f1_score": 0.97
+    },
+    "RNN_temporal": {
+      "val_accuracy": 0.9479,
+      "test_accuracy": 0.9327,
+      "f1_score": 0.93
+    }
+  }
+}
